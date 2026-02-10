@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_CONFIG } from '../../config/api.js';
 
 const UserFeedback = ({ complaintD, handlePopupClose, setActiveTab }) => {
   const [feedback, setFeedback] = useState('');
@@ -19,7 +20,7 @@ const UserFeedback = ({ complaintD, handlePopupClose, setActiveTab }) => {
 
     try {
       // Call the Flask API to get sentiment score and improvement area
-      const response = await axios.post('http://localhost:9898/v1/review_analysis/feedback_sentiment', {
+      const response = await axios.post(API_CONFIG.ML.FEEDBACK_SENTIMENT, {
         feedbacks: [feedback], // Send feedback as an array
       });
 

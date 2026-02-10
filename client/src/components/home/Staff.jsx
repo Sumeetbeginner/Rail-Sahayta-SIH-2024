@@ -8,6 +8,7 @@ import StaffProfile from "./StaffProfile";
 import Popup from "./Popup";
 import StaffLogin from "../auth/StaffLogin";
 import axios from "axios";
+import { getMediaUrl } from "../../config/api.js";
 import StaffComplaint from "./StaffComplaint";
 import StaffCookies from "./StaffCookies";
 
@@ -333,9 +334,9 @@ const Staff = () => {
                       <strong>Media:</strong>
                       <div className="detailMediaPreview">
                         {selectedComplaintDetail.media.match(/\\.(mp4|webm|ogg)$/i) ? (
-                          <video src={`http://localhost:9898/v1${selectedComplaintDetail.media}`} controls style={{maxWidth:'100%', maxHeight:300, borderRadius:8}} />
+                          <video src={getMediaUrl(selectedComplaintDetail.media)} controls style={{maxWidth:'100%', maxHeight:300, borderRadius:8}} />
                         ) : (
-                          <img src={`http://localhost:9898/v1${selectedComplaintDetail.media}`} alt="media" style={{maxWidth:'100%', maxHeight:300, borderRadius:8}} />
+                          <img src={getMediaUrl(selectedComplaintDetail.media)} alt="media" style={{maxWidth:'100%', maxHeight:300, borderRadius:8}} />
                         )}
                       </div>
                     </div>

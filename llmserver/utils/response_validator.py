@@ -191,7 +191,8 @@ class ResponseValidator:
     def text_category_fallback() -> Dict:
         """Default fallback for text categorization."""
         return {
-            "category": "management"
+            "category": "management",
+            "subcategory": "general"
         }
 
     @staticmethod

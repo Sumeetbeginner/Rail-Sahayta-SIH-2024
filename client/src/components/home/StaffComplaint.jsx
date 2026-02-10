@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_CONFIG } from '../../config/api.js';
 
 const StaffComplaint = ({ complaints, setCompView , onComplete, onProcess, onComplaintClick}) => {
   const [selectedMedia, setSelectedMedia] = useState(null);
 
   // Open media popup
-  const ML_SERVER = "http://localhost:9898/v1";
+  const ML_SERVER = API_CONFIG.ML_API;
   const handleMediaClick = (media) => {
     const url = media.startsWith("http") ? media : `${ML_SERVER}${media}`;
     setSelectedMedia(url);

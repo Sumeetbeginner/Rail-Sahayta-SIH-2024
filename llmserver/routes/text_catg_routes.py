@@ -19,10 +19,10 @@ api_routes_text_catg = Blueprint("api_routes_text_catg", __name__)
 @api_routes_text_catg.route("/text_category", methods=["POST"])
 def text_category():
     """
-    Categorize complaint text using LLM.
+    Categorize complaint text using LLM (Cerebras API).
 
     Request: JSON with 'complaint' field
-    Response: {"category": str}
+    Response: {"category": str, "subcategory": str}
     """
     try:
         data = request.json
@@ -31,50 +31,54 @@ def text_category():
 
         complaint = data['complaint']
 
-        # Get LLM router
-        llm = get_llm_router()
+        # Force use of Cerebras service
+        from services.cerebras_service import CerebrasService
+        llm = CerebrasService()
 
-        # Build prompt for text categorization
-        prompt = prompt_builder.text_categorization(complaint)
+        if not llm.is_available():
+            return jsonify({"error": "Cerebras API key not configured"}), 500
+
+        # Build prompt for combined categorization and subcategorization
+        prompt = prompt_builder.text_categorization_and_subcategory(complaint)
 
         # System prompt for consistent categorization
-        system_prompt = """You are a railway complaint classifier. 
-Analyze complaints and categorize them accurately into predefined categories.
-Always return valid JSON only."""
+        system_prompt = """You are a railway complaint classifier.
+Analyze complaints and categorize them accurately into predefined categories and subcategories.
+Always return valid JSON only with category and subcategory fields."""
 
-        # Call LLM text API
+        # Call Cerebras API
         response = llm.text_completion(prompt, system_prompt)
 
         # Validate and parse response
         result = response_validator.validate_and_parse(
             response,
-            fallback=response_validator.text_category_fallback(),
-            required_keys=["category"],
+            fallback={"category": "management", "subcategory": "general"},
+            required_keys=["category", "subcategory"],
             retry_fn=lambda: llm.text_completion(prompt, system_prompt),
             max_retries=1
         )
 
-        # Valid categories list
+        # Valid categories from hierarchy
         valid_categories = [
-            "damage_seat", "damage_window", "food", "unhygenic_compartment",
-            "unhygenic_toilet", "violence", "management", "ticketing issue",
-            "security", "Electricity", "medical"
+            "seat", "window", "food", "compartment", "toilet",
+            "violence", "management", "ticketing issue", "security",
+            "electricity", "medical"
         ]
 
         category = result.get("category", "management")
+        subcategory = result.get("subcategory", "general")
 
-        # Normalize category (handle slight variations)
+        # Normalize category
         category_lower = category.lower().replace("_", " ").replace("-", " ")
         for valid_cat in valid_categories:
-            if valid_cat.lower().replace("_", " ") == category_lower:
+            if valid_cat.lower() == category_lower:
                 category = valid_cat
                 break
         else:
-            # If no exact match, keep original or default
             if category not in valid_categories:
                 category = "management"
 
-        return jsonify({"category": category}), 200
+        return jsonify({"category": category, "subcategory": subcategory}), 200
 
     except Exception as e:
         logger.error(f"Text categorization error: {e}")

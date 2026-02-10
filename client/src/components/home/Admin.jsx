@@ -8,6 +8,7 @@ import emergencyC from "../../assets/icons/emergC.png";
 import AdminProfile from "./AdminProfile";
 import Popup from "./Popup";
 import AdminLogin from "../auth/AdminLogin";
+import { API_CONFIG, getMediaUrl } from "../../config/api.js";
 import axios from "axios";
 import RecurringIssue from "../charts/RecurringIssue.jsx";
 import CompCount from "../charts/CompCount.jsx";
@@ -176,7 +177,7 @@ const Admin = () => {
   };
 
   // Media Popup Handlers
-  const ML_SERVER = "http://localhost:9898/v1";
+  const ML_SERVER = API_CONFIG.ML_API;
   const handleMediaClick = (media) => {
     const url = media.startsWith("http") ? media : `${ML_SERVER}${media}`;
     setSelectedMedia(url);
@@ -693,9 +694,9 @@ const Admin = () => {
                   <strong>Media:</strong>
                   <div className="detailMediaPreview">
                     {selectedComplaintDetail.media.match(/\\.(mp4|webm|ogg)$/i) ? (
-                      <video src={`http://localhost:9898/v1${selectedComplaintDetail.media}`} controls style={{maxWidth:'100%', maxHeight:300, borderRadius:8}} />
+                      <video src={getMediaUrl(selectedComplaintDetail.media)} controls style={{maxWidth:'100%', maxHeight:300, borderRadius:8}} />
                     ) : (
-                      <img src={`http://localhost:9898/v1${selectedComplaintDetail.media}`} alt="media" style={{maxWidth:'100%', maxHeight:300, borderRadius:8}} />
+                      <img src={getMediaUrl(selectedComplaintDetail.media)} alt="media" style={{maxWidth:'100%', maxHeight:300, borderRadius:8}} />
                     )}
                   </div>
                 </div>

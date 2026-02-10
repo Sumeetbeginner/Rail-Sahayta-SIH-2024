@@ -41,6 +41,8 @@ import {
   CATEGORY_SUBCATEGORIES,
 } from "../../utils/llmFallback.js";
 
+import { API_CONFIG, getMediaUrl } from "../../config/api.js";
+
 // import complaintJson from '../../assets/complaintdata.json'
 
 const Home = () => {
@@ -487,7 +489,7 @@ const Home = () => {
 
     // Step 1: Upload media
     try {
-      const response = await fetch("http://localhost:9898/v1/upload", {
+      const response = await fetch(API_CONFIG.ML.UPLOAD, {
         method: "POST",
         body: formData,
       });
@@ -506,8 +508,8 @@ const Home = () => {
     try {
       const isVideo = selectedFile.type.startsWith("video/");
       const predictEndpoint = isVideo
-        ? "http://localhost:9898/v1/predictvideo"
-        : "http://localhost:9898/v1/predictimage";
+        ? API_CONFIG.ML.PREDICT_VIDEO
+        : API_CONFIG.ML.PREDICT_IMAGE;
 
       const predFormData = new FormData();
       predFormData.append("image", selectedFile);
@@ -738,7 +740,7 @@ const Home = () => {
     // Try ML backend for category, fallback to LLM
     try {
       const response = await fetch(
-        "http://localhost:9898/v1/text/text_category",
+        API_CONFIG.ML.TEXT_CATEGORY,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -761,7 +763,7 @@ const Home = () => {
       // Try subcategory API
       try {
         const subcategoryResponse = await fetch(
-          "http://localhost:9898/v1/text/text_subcategory",
+          API_CONFIG.ML.TEXT_SUBCATEGORY,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -875,10 +877,10 @@ const Home = () => {
 
     // Define API endpoints for specific categories
     const apiEndpoints = {
-      seat: `http://localhost:9898/v1/severity/seat_priority`,
-      window: `http://localhost:9898/v1/severity/win_priority`,
-      compartment: `http://localhost:9898/v1/severity/comp_severity`,
-      violence: `http://localhost:9898/v1/violence/violence_severity`,
+      seat: API_CONFIG.ML.SEAT_PRIORITY,
+      window: API_CONFIG.ML.WINDOW_PRIORITY,
+      compartment: API_CONFIG.ML.COMPARTMENT_SEVERITY,
+      violence: API_CONFIG.ML.VIOLENCE_SEVERITY,
     };
 
     // For specific categories, call the appropriate Python severity API
@@ -1080,7 +1082,7 @@ const Home = () => {
                 {file && file.type.startsWith("video/") ? (
                   <video height={200} autoPlay muted controls width="300">
                     <source
-                      src={`http://localhost:9898/v1${media}`}
+                      src={getMediaUrl(media)}
                       type={file.type}
                     />
                     Your browser does not support the video tag.
@@ -1088,7 +1090,7 @@ const Home = () => {
                 ) : (
                   <img
                   id="annotImg"
-                    src={`http://localhost:9898/v1${media}`}
+                    src={getMediaUrl(media)}
                     alt="Uploaded"
                     style={{ width: "300px", height: "auto" }}
                   />
@@ -1246,7 +1248,7 @@ const Home = () => {
               try {
                 const formData = new FormData();
                 formData.append("image", selectedFile);
-                const response = await fetch("http://localhost:9898/v1/ocr/ocr_extraction", {
+                const response = await fetch(API_CONFIG.ML.OCR_EXTRACTION, {
                   method: "POST",
                   body: formData,
                 });
@@ -1396,9 +1398,9 @@ const Home = () => {
                         {complaint.media && (
                           <div className="compCardMediaPreview">
                             {complaint.media.match(/\.(mp4|webm|ogg)$/i) ? (
-                              <video src={`http://localhost:9898/v1${complaint.media}`} height={60} muted style={{borderRadius:6, cursor:'pointer'}} onClick={() => handleMediaClick(complaint.media)} />
+                              <video src={getMediaUrl(complaint.media)} height={60} muted style={{borderRadius:6, cursor:'pointer'}} onClick={() => handleMediaClick(complaint.media)} />
                             ) : (
-                              <img src={`http://localhost:9898/v1${complaint.media}`} alt="media" style={{height:60, borderRadius:6, cursor:'pointer'}} onClick={() => handleMediaClick(complaint.media)} />
+                              <img src={getMediaUrl(complaint.media)} alt="media" style={{height:60, borderRadius:6, cursor:'pointer'}} onClick={() => handleMediaClick(complaint.media)} />
                             )}
                             <button className="compCardMediaBtn" onClick={() => handleMediaClick(complaint.media)}>
                               <i className="fas fa-image"></i> View Media
@@ -1569,7 +1571,7 @@ const Home = () => {
   const [selectedMedia, setSelectedMedia] = useState(null);
 
   // Media Popup Handlers
-  const ML_SERVER = "http://localhost:9898/v1";
+  const ML_SERVER = API_CONFIG.ML_API;
   const handleMediaClick = (media) => {
     const url = media.startsWith("http") ? media : `${ML_SERVER}${media}`;
     setSelectedMedia(url);
@@ -1886,9 +1888,9 @@ const Home = () => {
                   <strong>Media:</strong>
                   <div className="detailMediaPreview">
                     {selectedComplaintDetail.media.match(/\\.(mp4|webm|ogg)$/i) ? (
-                      <video src={`http://localhost:9898/v1${selectedComplaintDetail.media}`} controls style={{maxWidth:'100%', maxHeight:300, borderRadius:8}} />
+                      <video src={getMediaUrl(selectedComplaintDetail.media)} controls style={{maxWidth:'100%', maxHeight:300, borderRadius:8}} />
                     ) : (
-                      <img src={`http://localhost:9898/v1${selectedComplaintDetail.media}`} alt="media" style={{maxWidth:'100%', maxHeight:300, borderRadius:8}} />
+                      <img src={getMediaUrl(selectedComplaintDetail.media)} alt="media" style={{maxWidth:'100%', maxHeight:300, borderRadius:8}} />
                     )}
                   </div>
                 </div>

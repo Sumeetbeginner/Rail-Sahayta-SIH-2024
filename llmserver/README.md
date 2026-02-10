@@ -79,7 +79,7 @@ All endpoints match the original mlserver structure:
 | `/v1/severity/comp_severity` | POST | Complaint image analysis |
 | `/v1/violence/violence_severity` | POST | Violence detection |
 | `/v1/ocr/ocr_extraction` | POST | OCR text extraction |
-| `/v1/text/text_category` | POST | Text categorization |
+| `/v1/text/text_category` | POST | Text categorization and subcategory (uses Cerebras API) |
 | `/v1/text/text_subcategory` | POST | Text sub-categorization |
 | `/v1/translate` | POST | Text translation |
 | `/v1/review_analysis/feedback_sentiment` | POST | Sentiment analysis |

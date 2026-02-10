@@ -118,25 +118,41 @@ Return JSON format:
 }}"""
 
     @staticmethod
-    def text_categorization(complaint: str) -> str:
-        """Build prompt for complaint text categorization."""
-        categories = [
-            "damage_seat", "damage_window", "food", "unhygenic_compartment",
-            "unhygenic_toilet", "violence", "management", "ticketing issue",
-            "security", "Electricity", "medical"
-        ]
+    def text_categorization_and_subcategory(complaint: str) -> str:
+        """Build prompt for complaint text categorization and subcategory selection."""
+        # Categories and subcategories based on hierarchy2.json
+        hierarchy = {
+            "seat": ["broken seat", "scratched seat", "dirty seat", "bedroll"],
+            "window": ["cracked window", "dirty window", "broken window"],
+            "food": ["spoilt/expired food", "food taste", "food quantity"],
+            "compartment": ["garbage on coach"],
+            "toilet": ["unhygenic toilet", "unhygenic washbasin", "flush problem", "no water"],
+            "violence": ["staff violence/behaviour", "passenger violence", "bribery", "seat hijacking", "smoking/alcohol"],
+            "management": ["train delay", "app issue", "missing items"],
+            "ticketing issue": ["wrong ticket", "money issue"],
+            "security": ["robbery", "misbehaviour with lady passenger", "unauthorized person in ladies coach", "absence of security personnel"],
+            "electricity": ["AC (Air Conditioner)", "Light", "Fan", "Charging Port"],
+            "medical": ["First Aid Kit Requirement", "Medical Assistance"]
+        }
+
+        # Build the prompt with categories and their subcategories
+        category_list = []
+        for category, subcats in hierarchy.items():
+            category_list.append(f"{category}: {', '.join(subcats)}")
 
         return f"""{PromptBuilder.JSON_INSTRUCTION}
 
-Categorize this railway complaint into ONE of these categories:
-{', '.join(categories)}
+Analyze this railway complaint and categorize it into the most appropriate category and subcategory.
+
+Available categories and their subcategories:
+{chr(10).join(f"- {cat}" for cat in category_list)}
 
 Complaint: "{complaint}"
 
-Consider keywords and context to determine the most appropriate category.
+Consider the keywords, context, and meaning to determine the most appropriate category and subcategory.
 
 Return JSON format:
-{{"category": "<category>"}}"""
+{{"category": "<category>", "subcategory": "<subcategory>"}}"""
 
     @staticmethod
     def text_subcategorization(description: str, category: str) -> str:
