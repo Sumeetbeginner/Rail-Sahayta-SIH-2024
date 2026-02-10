@@ -60,10 +60,22 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
+    # CORS Configuration - Production and Development URLs
+    cors_origins = [
+        'https://railsahayta.neuramaps.in',
+        'https://rail-sahayta-final-1.onrender.com',
+        'http://localhost:5173',
+        'http://localhost:3000'
+    ]
+    
+    # Add any additional origins from environment variable
+    if os.getenv('CORS_ORIGINS'):
+        cors_origins.extend(os.getenv('CORS_ORIGINS').split(','))
+
     # Configure CORS
     CORS(app, supports_credentials=True, resources={
         r"/*": {
-            "origins": os.getenv('CORS_ORIGINS', 'http://localhost:5173'),
+            "origins": cors_origins,
             "methods": ["GET", "POST", "OPTIONS"],
             "allow_headers": ["Content-Type", "Authorization"],
         }

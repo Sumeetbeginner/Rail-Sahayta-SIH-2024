@@ -7,6 +7,11 @@ from flask_limiter.util import get_remote_address
 import pandas as pd
 from statsmodels.tsa.arima.model import ARIMA
 import numpy as np
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Import API routes
 from views.seat_routes import api_routes_seat
@@ -23,10 +28,23 @@ print("NumPy version:", np.__version__)
 print("Imports successful...")
 
 app = Flask(__name__)
-# Apply CORS with specific configuration to handle preflight requests
+
+# CORS Configuration - Production and Development URLs
+cors_origins = [
+    'https://railsahayta.neuramaps.in',
+    'https://rail-sahayta-final-1.onrender.com',
+    'http://localhost:5173',
+    'http://localhost:3000'
+]
+
+# Add any additional origins from environment variable
+if os.getenv('CORS_ORIGINS'):
+    cors_origins.extend(os.getenv('CORS_ORIGINS').split(','))
+
+# Apply CORS with configuration
 CORS(app, supports_credentials=True, resources={
     r"/*": {
-        "origins": "http://localhost:5173",  # Update this if needed for other environments
+        "origins": cors_origins,
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
     }

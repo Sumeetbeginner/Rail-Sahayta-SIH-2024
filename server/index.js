@@ -14,10 +14,32 @@ import userRoutes from './routes/user.js';
 const app = express();
 dotenv.config();
 
+// CORS Configuration - Production and Development URLs
+const allowedOrigins = [
+  'https://railsahayta.neuramaps.in',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1 || process.env.CLIENT_URL?.split(',').includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
 // Middleware
 app.use(express.json());
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOptions));
 
 // Serve static files from the "uploads" directory
 app.use('/user/media', express.static('uploads'));
