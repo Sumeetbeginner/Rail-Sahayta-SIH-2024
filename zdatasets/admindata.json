@@ -1,0 +1,65 @@
+[
+  {
+    "_id": { "$oid": "673f632298f12be36083faa8" },
+    "email": "mechanicaldept@gmail.com",
+    "password": "Mechanical@123",
+    "dept": "Mechanical",
+    "role": "Sr. Divisional Mechanical Engineer"
+  },
+  {
+    "_id": { "$oid": "673f632298f12be36083faa9" },
+    "email": "cateringdept@gmail.com",
+    "password": "Catering@123",
+    "dept": "Catering",
+    "role": "Sr. Divisional Catering Manager"
+  },
+  {
+    "_id": { "$oid": "673f632298f12be36083faaa" },
+    "email": "hygienedept@gmail.com",
+    "password": "Hygiene@123",
+    "dept": "Hygiene",
+    "role": "Chief Hygiene Superintendent"
+  },
+  {
+    "_id": { "$oid": "673f632298f12be36083faab" },
+    "email": "securitydept@gmail.com",
+    "password": "Security@123",
+    "dept": "Security",
+    "role": "Sr. Divisional Security Commissioner"
+  },
+  {
+    "_id": { "$oid": "673f632298f12be36083faac" },
+    "email": "managementdept@gmail.com",
+    "password": "Management@123",
+    "dept": "Management",
+    "role": "Divisional Railway Manager"
+  },
+  {
+    "_id": { "$oid": "673f632298f12be36083faad" },
+    "email": "commercialdept@gmail.com",
+    "password": "Commercial@123",
+    "dept": "Commercial",
+    "role": "Sr. Divisional Commercial Manager"
+  },
+  {
+    "_id": { "$oid": "673f632298f12be36083faae" },
+    "email": "electricaldept@gmail.com",
+    "password": "Electric@123",
+    "dept": "Electrical",
+    "role": "Sr. Divisional Electrical Engineer"
+  },
+  {
+    "_id": { "$oid": "673f632298f12be36083faaf" },
+    "email": "medicaldept@gmail.com",
+    "password": "Medical@123",
+    "dept": "Medical",
+    "role": "Sr. Divisional Medical Engineer"
+  },
+  {
+    "_id": { "$oid": "673f632298f12be36083fab0" },
+    "email": "railwaycomplainthead@gmail.com",
+    "password": "rail@123",
+    "dept": "Railway",
+    "role": "Sr. Railway Complaint Head"
+  }
+]

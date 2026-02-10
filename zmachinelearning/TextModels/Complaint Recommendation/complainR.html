@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Suggestion System</title>
+
+</head>
+
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    width: 400px;
+    text-align: center;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#suggestionList {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0;
+    border: 1px solid #ddd;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+#suggestionList li {
+    padding: 8px;
+    cursor: pointer;
+}
+
+#suggestionList li:hover {
+    background-color: #eee;
+}
+
+</style>
+<body>
+
+
+    <div class="container">
+        <h1>Enter Your Complaint</h1>
+        <input type="text" id="complaintInput" placeholder="Describe your issue..." autocomplete="off">
+        <ul id="suggestionList"></ul>
+    </div>
+
+  <script>// Elements
+    const complaintInput = document.getElementById("complaintInput");
+    const suggestionList = document.getElementById("suggestionList");
+    
+    // Function to fetch and parse CSV file
+    async function loadComplaints() {
+        const response = await fetch("complaintdata.csv");
+        const data = await response.text();
+        return parseCSV(data);
+    }
+    
+    // Parse CSV data into a JavaScript array
+    function parseCSV(data) {
+        const rows = data.trim().split("\n").slice(1);  // Skip header row
+        return rows.map(row => {
+            const [id, category, details] = row.split(",");
+            return { id: id.trim(), category: category.trim(), details: details.trim() };
+        });
+    }
+    
+    // Filter complaints based on user input
+    function filterComplaints(query) {
+        if (!query) return [];
+        return complaints.filter(complaint => 
+            complaint.details.toLowerCase().includes(query.toLowerCase())
+        );
+    }
+    
+    // Display suggestions
+    function displaySuggestions(matches) {
+        suggestionList.innerHTML = "";  // Clear previous suggestions
+        matches.forEach(match => {
+            const li = document.createElement("li");
+            li.textContent = match.details;
+            li.addEventListener("click", () => {
+                complaintInput.value = match.details;
+                suggestionList.innerHTML = "";  // Clear suggestions
+            });
+            suggestionList.appendChild(li);
+        });
+    }
+    
+    // Load complaints from CSV and add event listener for suggestions
+    let complaints = [];
+    loadComplaints().then(data => {
+        complaints = data;
+        complaintInput.addEventListener("input", () => {
+            const query = complaintInput.value;
+            const matches = filterComplaints(query);
+            displaySuggestions(matches);
+        });
+    });
+    </script>
+</body>
+</html>

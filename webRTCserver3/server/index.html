@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Rail Sahayta - Emergency Video Support</title>
+  <script type='text/javascript' src='https://cdn.scaledrone.com/scaledrone.min.js'></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0f172a;
+      color: white;
+    }
+
+    /* Government-style header */
+    .gov-header {
+      background: linear-gradient(135deg, #1e3a5f, #0c2340);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 3px solid #f59e0b;
+    }
+
+    .gov-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .gov-header h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .gov-header h1 span {
+      color: #f59e0b;
+    }
+
+    .gov-badge {
+      background: #dc2626;
+      color: white;
+      padding: 3px 10px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      animation: blink 1.2s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .gov-header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    .gov-header-right i {
+      color: #f59e0b;
+    }
+
+    /* Status bar */
+    .status-bar {
+      background: #1e293b;
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #94a3b8;
+      border-bottom: 1px solid #334155;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse-dot 1.5s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+    }
+
+    /* Main content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      gap: 16px;
+    }
+
+    .video-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    video {
+      width: 100%;
+      max-width: 480px;
+      border-radius: 10px;
+      border: 2px solid #334155;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      background: #1e293b;
+    }
+
+    .video-label {
+      text-align: center;
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: -8px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .copy {
+      font-size: 13px;
+      color: #cbd5e1;
+      text-align: center;
+      padding: 8px 16px;
+      background: rgba(30, 41, 59, 0.8);
+      border-radius: 6px;
+      border: 1px solid #334155;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 12px;
+      padding: 16px;
+      background: #1e293b;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .ctrl-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+
+    .ctrl-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .ctrl-btn-mute { background: #475569; }
+    .ctrl-btn-video { background: #475569; }
+    .ctrl-btn-end { background: #dc2626; width: 56px; height: 56px; font-size: 22px; }
+    .ctrl-btn-end:hover { background: #b91c1c; }
+
+    /* Footer */
+    .gov-footer {
+      background: #1e293b;
+      padding: 8px 24px;
+      text-align: center;
+      font-size: 11px;
+      color: #64748b;
+      border-top: 1px solid #334155;
+    }
+
+    @media (orientation: landscape) {
+      video { width: 45%; }
+    }
+
+    @media (max-width: 768px) {
+      .gov-header h1 { font-size: 14px; }
+      .gov-header-right { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+  
+  <div class="gov-header">
+    <div class="gov-header-left">
+      <h1>🚂 Rail Sahayta <span>| Emergency Support</span></h1>
+      <span class="gov-badge">LIVE</span>
+    </div>
+    <div class="gov-header-right">
+      <span><i class="fas fa-shield-alt"></i> Secure Connection</span>
+      <span><i class="fas fa-lock"></i> Encrypted</span>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <div class="status-indicator">
+      <div class="status-dot"></div>
+      <span>Connected to Railway Support</span>
+    </div>
+    <span id="callTimer">00:00</span>
+  </div>
+
+  <div class="main-content">
+    <div class="copy">
+      Share this page URL with railway support to start the emergency video call
+    </div>
+    <div class="video-container" id="videoContainer">
+      <div>
+        <video id="localVideo" autoplay muted playsinline></video>
+        <p class="video-label">Your Camera</p>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="ctrl-btn ctrl-btn-mute" onclick="toggleMute()" title="Mute/Unmute">
+        <i class="fas fa-microphone" id="muteIcon"></i>
+      </button>
+      <button class="ctrl-btn ctrl-btn-video" onclick="toggleVideo()" title="Camera On/Off">
+        <i class="fas fa-video" id="videoIcon"></i>
+      </button>
+      <button class="ctrl-btn ctrl-btn-end" onclick="endCall()" title="End Call">
+        <i class="fas fa-phone-slash"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="gov-footer">
+    Ministry of Railways, Government of India | Rail Sahayta Emergency Support System
+  </div>
+
+  <script>
+    // Generate random room name if needed
+    if (!location.hash) {
+      location.hash = Math.floor(Math.random() * 0xFFFFFF).toString(16);
+    }
+    const roomHash = location.hash.substring(1);
+
+    const drone = new ScaleDrone('yiS12Ts5RdNhebyM');
+    const roomName = 'observable-' + roomHash;
+    const configuration = {
+      iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+    };
+    let room;
+    let pc;
+    let localStream;
+    let userStreams = {};
+    let isMuted = false;
+    let isVideoOff = false;
+    let callSeconds = 0;
+    let timerInterval;
+
+    function onSuccess() {}
+    function onError(error) { console.error(error); }
+
+    // Call timer
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        callSeconds++;
+        const m = String(Math.floor(callSeconds / 60)).padStart(2, '0');
+        const s = String(callSeconds % 60).padStart(2, '0');
+        document.getElementById('callTimer').textContent = m + ':' + s;
+      }, 1000);
+    }
+
+    // Call controls
+    function toggleMute() {
+      if (!localStream) return;
+      isMuted = !isMuted;
+      localStream.getAudioTracks().forEach(t => t.enabled = !isMuted);
+      document.getElementById('muteIcon').className = isMuted ? 'fas fa-microphone-slash' : 'fas fa-microphone';
+    }
+
+    function toggleVideo() {
+      if (!localStream) return;
+      isVideoOff = !isVideoOff;
+      localStream.getVideoTracks().forEach(t => t.enabled = !isVideoOff);
+      document.getElementById('videoIcon').className = isVideoOff ? 'fas fa-video-slash' : 'fas fa-video';
+    }
+
+    function endCall() {
+      if (pc) pc.close();
+      if (localStream) localStream.getTracks().forEach(t => t.stop());
+      clearInterval(timerInterval);
+      document.querySelector('.status-dot').style.background = '#ef4444';
+      document.querySelector('.status-indicator span').textContent = 'Call Ended';
+      document.querySelector('.gov-badge').textContent = 'ENDED';
+      document.querySelector('.gov-badge').style.background = '#475569';
+      document.querySelector('.gov-badge').style.animation = 'none';
+    }
+
+    drone.on('open', error => {
+      if (error) return console.error(error);
+      room = drone.subscribe(roomName);
+      room.on('open', error => { if (error) onError(error); });
+      room.on('members', members => {
+        console.log('MEMBERS', members);
+        const isOfferer = members.length === 2;
+        startWebRTC(isOfferer);
+      });
+    });
+
+    function sendMessage(message) {
+      drone.publish({ room: roomName, message });
+    }
+
+    function startWebRTC(isOfferer) {
+      pc = new RTCPeerConnection(configuration);
+
+      pc.onicecandidate = event => {
+        if (event.candidate) sendMessage({ candidate: event.candidate });
+      };
+
+      if (isOfferer) {
+        pc.onnegotiationneeded = () => {
+          pc.createOffer().then(localDescCreated).catch(onError);
+        };
+      }
+
+      pc.ontrack = event => {
+        const stream = event.streams[0];
+        if (!userStreams[stream.id]) {
+          userStreams[stream.id] = stream;
+          addRemoteVideo(stream);
+          startTimer();
+        }
+      };
+
+      navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+      }).then(stream => {
+        localStream = stream;
+        document.getElementById('localVideo').srcObject = stream;
+        stream.getTracks().forEach(track => pc.addTrack(track, stream));
+      }).catch(err => {
+        console.error('Error accessing media devices: ', err);
+        alert('Please enable camera and microphone permissions to use emergency video support.');
+      });
+
+      room.on('data', (message, client) => {
+        if (client.id === drone.clientId) return;
+        if (message.sdp) {
+          pc.setRemoteDescription(new RTCSessionDescription(message.sdp), () => {
+            if (pc.remoteDescription.type === 'offer') {
+              pc.createAnswer().then(localDescCreated).catch(onError);
+            }
+          }, onError);
+        } else if (message.candidate) {
+          pc.addIceCandidate(new RTCIceCandidate(message.candidate), onSuccess, onError);
+        }
+      });
+    }
+
+    function addRemoteVideo(stream) {
+      const wrapper = document.createElement('div');
+      const videoEl = document.createElement('video');
+      videoEl.autoplay = true;
+      videoEl.playsinline = true;
+      videoEl.srcObject = stream;
+      const label = document.createElement('p');
+      label.className = 'video-label';
+      label.textContent = 'Railway Support';
+      wrapper.appendChild(videoEl);
+      wrapper.appendChild(label);
+      document.getElementById('videoContainer').appendChild(wrapper);
+    }
+
+    function localDescCreated(desc) {
+      pc.setLocalDescription(desc, () => sendMessage({ sdp: pc.localDescription }), onError);
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Compression Tool</title>
+</head>
+<body>
+
+<h1>Video Compression Tool</h1>
+<input type="file" id="videoInput" accept="video/*" />
+<video id="videoPreview" width="400" controls></video>
+<button id="processButton" disabled>Process Video</button>
+<video id="compressedVideo" width="400" controls></video>
+<a id="downloadLink" style="display:none">Download Compressed Video</a>
+
+<script>
+  const videoInput = document.getElementById("videoInput");
+  const videoPreview = document.getElementById("videoPreview");
+  const processButton = document.getElementById("processButton");
+  const compressedVideo = document.getElementById("compressedVideo");
+  const downloadLink = document.getElementById("downloadLink");
+
+  let videoFile = null;
+  let videoElement = null;
+  let frames = [];
+
+  videoInput.addEventListener("change", (event) => {
+    videoFile = event.target.files[0];
+    if (videoFile) {
+      videoPreview.src = URL.createObjectURL(videoFile);
+      videoPreview.load();
+      processButton.disabled = false;
+    }
+  });
+
+  processButton.addEventListener("click", () => {
+    if (videoFile) {
+      processVideo(videoFile);
+    }
+  });
+
+  async function processVideo(file) {
+    // Create a video element to process frames
+    videoElement = document.createElement("video");
+    videoElement.src = URL.createObjectURL(file);
+    await videoElement.play(); // Wait for video metadata
+
+    const frameCount = 25;  // Changed to 25 frames
+    const frameDuration = videoElement.duration / frameCount;
+
+    // Generate random timestamps to capture frames
+    let randomTimes = [];
+    while (randomTimes.length < frameCount) {
+      let randomTime = Math.random() * videoElement.duration;
+      if (!randomTimes.includes(randomTime)) {
+        randomTimes.push(randomTime);
+      }
+    }
+
+    // Create a canvas to draw the frames and compress them
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    
+    let processedFrames = [];
+
+    // Capture and compress the frames at random times
+    for (let time of randomTimes) {
+      await captureFrame(time, canvas, ctx);
+      // Compress frame (this will scale down)
+      const compressedFrame = canvas.toDataURL("image/jpeg", 0.5); // 50% quality
+      processedFrames.push(compressedFrame);
+    }
+
+    // Create video from compressed frames using MediaRecorder
+    const videoBlob = await createVideoFromFrames(processedFrames, canvas, ctx);
+    const videoURL = URL.createObjectURL(videoBlob);
+    compressedVideo.src = videoURL;
+    compressedVideo.load();
+    compressedVideo.play();
+
+    // Enable download link
+    downloadLink.style.display = "inline";
+    downloadLink.href = videoURL;
+    downloadLink.download = "compressed_video.webm";
+  }
+
+  // Capture a frame at the given time
+  function captureFrame(time, canvas, ctx) {
+    return new Promise((resolve) => {
+      videoElement.currentTime = time;
+      videoElement.onseeked = () => {
+        canvas.width = videoElement.videoWidth;
+        canvas.height = videoElement.videoHeight;
+        ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+        resolve();
+      };
+    });
+  }
+
+  // Create video from frames using MediaRecorder
+  function createVideoFromFrames(frames, canvas, ctx) {
+    return new Promise((resolve, reject) => {
+      // Create a stream from canvas
+      const stream = canvas.captureStream(30); // Capture at 30 FPS
+      const mediaRecorder = new MediaRecorder(stream, { mimeType: "video/webm" });
+
+      const chunks = [];
+      mediaRecorder.ondataavailable = (event) => {
+        chunks.push(event.data);
+      };
+      
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: "video/webm" });
+        resolve(blob);  // Resolve with the video blob
+      };
+
+      mediaRecorder.start();
+
+      // Play through frames to generate video
+      let frameIndex = 0;
+      const interval = setInterval(() => {
+        if (frameIndex < frames.length) {
+          const img = new Image();
+          img.src = frames[frameIndex];
+          img.onload = () => {
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            frameIndex++;
+          };
+        } else {
+          clearInterval(interval);
+          mediaRecorder.stop();
+        }
+      }, 1000 / 30); // Draw a frame every 1/30th second (30 FPS)
+    });
+  }
+</script>
+
+</body>
+</html>
