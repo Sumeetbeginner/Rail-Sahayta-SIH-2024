@@ -24,6 +24,7 @@ dist-ssr
 *.sw?
 
 .env
+mlserver/ven/
 impData.md
 
 # Large dataset files

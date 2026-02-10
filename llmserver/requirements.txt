@@ -1,0 +1,18 @@
+# LLMServer - Lightweight ML Server Dependencies
+# No heavy ML libraries (TensorFlow, Torch, PaddleOCR, Spacy)
+
+# Web Framework
+Flask>=2.3.0
+flask-cors>=4.0.0
+
+# HTTP Client
+requests>=2.31.0
+
+# Environment Management
+python-dotenv>=1.0.0
+
+# Image Processing (lightweight)
+Pillow>=10.0.0
+
+# Optional: Rate limiting (uncomment if needed)
+# flask-limiter>=3.5.0
