@@ -42,7 +42,7 @@ cd server
 npm install
 npm start
 ```
-Backend will run on: `http://localhost:3002`
+Backend will run on: `https://rail-sahayta-final-1.onrender.com`
 
 ### Step 4: Set Up Frontend Client
 ```bash
@@ -209,7 +209,7 @@ ML_SERVER_URL=http://localhost:9898
 
 ### Frontend (vite.config.js or .env)
 ```env
-VITE_API_URL=http://localhost:3002
+VITE_API_URL=https://rail-sahayta-final-1.onrender.com
 VITE_ML_URL=http://localhost:9898
 ```
 

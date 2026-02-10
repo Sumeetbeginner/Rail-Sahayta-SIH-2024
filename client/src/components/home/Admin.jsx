@@ -88,7 +88,7 @@ const Admin = () => {
       if (userId && userType) {
         try {
           const response = await axios.post(
-            "http://localhost:3002/auth/fetchuserdata",
+            "https://rail-sahayta-final-1.onrender.com/auth/fetchuserdata",
             {
               userId,
               userType,
@@ -140,7 +140,7 @@ const Admin = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3002/admin/getstaffbydept",
+        "https://rail-sahayta-final-1.onrender.com/admin/getstaffbydept",
         {
           dept: userData.dept,
         }
@@ -161,7 +161,7 @@ const Admin = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3002/admin/deptcomp",
+        "https://rail-sahayta-final-1.onrender.com/admin/deptcomp",
         {
           dept: userData.dept,
         }
@@ -197,7 +197,7 @@ const Admin = () => {
 
   const handleStatusChange = async (complaintId, newStatus) => {
     try {
-      await axios.post('http://localhost:3002/staff/updatecompstatus', {
+      await axios.post('https://rail-sahayta-final-1.onrender.com/staff/updatecompstatus', {
         complaintId,
         status: newStatus,
       });

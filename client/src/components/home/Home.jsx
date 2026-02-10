@@ -77,7 +77,7 @@ const Home = () => {
       if (userId && userType) {
         try {
           const response = await axios.post(
-            "http://localhost:3002/auth/fetchuserdata",
+            "https://rail-sahayta-final-1.onrender.com/auth/fetchuserdata",
             {
               userId,
               userType: "user",
@@ -144,7 +144,7 @@ const Home = () => {
   // const fetchComplaintData = async () => {
   //   try {
   //     const response = await axios.post(
-  //       "http://localhost:3002/user/viewusercomp",
+  //       "https://rail-sahayta-final-1.onrender.com/user/viewusercomp",
   //       {
   //         userId: userData._id,
   //       }
@@ -165,7 +165,7 @@ const Home = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3002/user/viewusercomp",
+        "https://rail-sahayta-final-1.onrender.com/user/viewusercomp",
         {
           userId: userData._id,
           page,
@@ -252,7 +252,7 @@ const Home = () => {
     try {
       // Update complaint status to "Completed" instead of deleting
       const response = await axios.post(
-        "http://localhost:3002/staff/updatecompstatus",
+        "https://rail-sahayta-final-1.onrender.com/staff/updatecompstatus",
         {
           complaintId: complaintId,
           status: "Completed", // Mark as completed
@@ -718,7 +718,7 @@ const Home = () => {
       const status = "Pending"; // Set status to "Pending"
 
       const response = await axios.post(
-        "http://localhost:3002/staff/updatecompstatus",
+        "https://rail-sahayta-final-1.onrender.com/staff/updatecompstatus",
         { complaintId, status }
       );
 
@@ -978,7 +978,7 @@ const Home = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3002/user/addcomplaint",
+        "https://rail-sahayta-final-1.onrender.com/user/addcomplaint",
         {
           category: finalCategory,
           subcategory: finalSubcategory,
@@ -1599,7 +1599,7 @@ const Home = () => {
     try {
       // Sending a POST request to your backend to re-raise the complaint
       const response = await axios.post(
-        "http://localhost:3002/user/reraisecomp",
+        "https://rail-sahayta-final-1.onrender.com/user/reraisecomp",
         {
           complaintId: complaintId,
         }

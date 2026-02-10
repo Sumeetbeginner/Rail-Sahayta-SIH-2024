@@ -33,7 +33,7 @@ const StaffComplaint = ({ complaints, setCompView , onComplete, onProcess, onCom
 
   const updateStatus = async (complaintId, status) => {
     try {
-        const response = await axios.post('http://localhost:3002/staff/updatecompstatus', {
+        const response = await axios.post('https://rail-sahayta-final-1.onrender.com/staff/updatecompstatus', {
           complaintId,
           status,
         });

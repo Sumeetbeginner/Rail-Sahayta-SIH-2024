@@ -9,7 +9,7 @@ const StaffCookies = ({ cookies, staffId, onRemove }) => {
       // Call the API to remove the cookie
       const staffId = localStorage.getItem('userId')
       const response = await axios.post(
-        "http://localhost:3002/staff/removecookie",
+        "https://rail-sahayta-final-1.onrender.com/staff/removecookie",
         {
           staffId,
           cookieId,

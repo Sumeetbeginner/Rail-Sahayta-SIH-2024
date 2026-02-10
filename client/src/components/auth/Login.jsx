@@ -14,7 +14,7 @@ const Login = ({ setIsAuthenticated, setUserData, handlePopupClose }) => {
     setLoading(true)
 
     try {
-      const response = await axios.post("http://localhost:3002/auth/login", {
+      const response = await axios.post("https://rail-sahayta-final-1.onrender.com/auth/login", {
         email,
         password,
       });

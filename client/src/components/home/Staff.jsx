@@ -57,7 +57,7 @@ const Staff = () => {
       console.log(`${staffId} : staffId`);
       
       const response = await axios.post(
-        "http://localhost:3002/staff/getcookiesdept",
+        "https://rail-sahayta-final-1.onrender.com/staff/getcookiesdept",
         { staffId }
       );
       setCookies(response.data.cookies); // Update cookies state with the response data
@@ -79,7 +79,7 @@ const Staff = () => {
     try {
       const staffId = localStorage.getItem("userId");
       const response = await axios.post(
-        "http://localhost:3002/staff/assignedcomp",
+        "https://rail-sahayta-final-1.onrender.com/staff/assignedcomp",
         { staffId }
       );
 
@@ -99,7 +99,7 @@ const Staff = () => {
     try {
       const staffId = localStorage.getItem("userId");
       const response = await axios.post(
-        "http://localhost:3002/staff/solvedcomp",
+        "https://rail-sahayta-final-1.onrender.com/staff/solvedcomp",
         { staffId }
       );
 
@@ -140,7 +140,7 @@ const Staff = () => {
       if (userId && userType) {
         try {
           const response = await axios.post(
-            "http://localhost:3002/auth/fetchuserdata",
+            "https://rail-sahayta-final-1.onrender.com/auth/fetchuserdata",
             {
               userId,
               userType: "staff",

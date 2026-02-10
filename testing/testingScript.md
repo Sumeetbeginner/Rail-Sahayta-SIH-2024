@@ -48,7 +48,7 @@ POST - http://localhost:3001/admin/loginadmin
 
 <!-- Add Staff -->
 
-POST - http://localhost:3002/admin/addstaff
+POST - https://rail-sahayta-final-1.onrender.com/admin/addstaff
 
 {
     "email" : "Talha Ansari",
@@ -176,7 +176,7 @@ POST - http://localhost:3001/staff/profile
 
 <!-- Get Department Wise Complaints -->
 
-POST - http://localhost:3002/admin/deptcomp
+POST - https://rail-sahayta-final-1.onrender.com/admin/deptcomp
 
 {
   "dept" : "Electrical"

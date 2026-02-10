@@ -21,7 +21,7 @@ const Register = ({ setPopupType }) => {
     e.preventDefault();
     
     // Add client-side validation if needed
-    const response = await fetch("http://localhost:3002/auth/register", {
+    const response = await fetch("https://rail-sahayta-final-1.onrender.com/auth/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

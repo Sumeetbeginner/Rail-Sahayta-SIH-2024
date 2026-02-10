@@ -14,7 +14,7 @@ const AdminLogin = ({ setIsAuthenticated, setUserData, handlePopupClose, setPopu
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:3002/admin/loginadmin", { email, password });
+      const response = await axios.post("https://rail-sahayta-final-1.onrender.com/admin/loginadmin", { email, password });
 
       if (response.status === 200) {
         console.log(response.data);

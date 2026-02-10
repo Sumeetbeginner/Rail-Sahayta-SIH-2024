@@ -709,7 +709,7 @@ Daily Cron Job (00:00)
 ## 📡 API Documentation
 
 ### Base URLs
-- **Application Server:** `http://localhost:3002`
+- **Application Server:** `https://rail-sahayta-final-1.onrender.com`
 - **ML Server:** `http://localhost:9898`
 - **Chatbot Server:** `http://localhost:5000`
 - **YOLO Server:** `http://localhost:8000`

@@ -29,7 +29,7 @@ const AddStaff = ({ userData, setShowType, handlePopupClose, onStaffAdded  }) =>
     const email = `${firstName}.${userData.dept.toLowerCase()}@gmail.com`;
 
     try {
-      const response = await axios.post("http://localhost:3002/admin/addstaff", {
+      const response = await axios.post("https://rail-sahayta-final-1.onrender.com/admin/addstaff", {
         ...formData,
         email,
       });
