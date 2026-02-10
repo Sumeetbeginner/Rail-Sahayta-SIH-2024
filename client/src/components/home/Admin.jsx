@@ -11,7 +11,7 @@ import AdminLogin from "../auth/AdminLogin";
 import axios from "axios";
 import RecurringIssue from "../charts/RecurringIssue.jsx";
 import CompCount from "../charts/CompCount.jsx";
-import DutyShift from "../charts/dutyShift.jsx";
+import DutyShift from "../charts/DutyShift.jsx";
 import ComplaintRR from "../charts/ComplaintRR.jsx";
 import ComplaintRR2 from "../charts/ComplaintRR2.jsx";
 import StaffAvgRating from "../charts/StaffAvgRating.jsx";
